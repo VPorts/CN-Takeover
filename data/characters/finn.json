@@ -1,0 +1,53 @@
+{
+  "version": "1.0.0",
+  "name": "finn",
+  "assetPath": "characters/finn",
+  "scale": 1.0,
+  "antialiasing": true,
+  "flipX": false,
+  "singDuration": 6.1,
+  "position": [0, 0],
+  "cameraOffsets": [-40, 60],
+  "cameraScale": 1.0,
+  "healthIcon": {
+    "id": "finn",
+    "isPixel": false
+  },
+  "animations": [
+    {
+      "name": "idle",
+      "prefix": "finn idle",
+      "fps": 24,
+      "looped": true,
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singLEFT",
+      "prefix": "finn left",
+      "fps": 24,
+      "looped": false,
+      "offsets": [523, -95]
+    },
+    {
+      "name": "singDOWN",
+      "prefix": "finn down",
+      "fps": 24,
+      "looped": false,
+      "offsets": [-10, -105]
+    },
+    {
+      "name": "singUP",
+      "prefix": "finn up",
+      "fps": 24,
+      "looped": false,
+      "offsets": [80, 97]
+    },
+    {
+      "name": "singRIGHT",
+      "prefix": "finn rigth",
+      "fps": 24,
+      "looped": false,
+      "offsets": [20, -129]
+    }
+  ]
+}

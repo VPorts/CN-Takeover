@@ -1,0 +1,88 @@
+{
+  "version": "1.0.0",
+  "name": "jake",
+  "assetPath": "characters/JAKE",
+  "scale": 1.0,
+  "antialiasing": true,
+  "flipX": false,
+  "singDuration": 6.1,
+  "position": [-110, 310],
+  "cameraOffsets": [-100, -80],
+  "cameraScale": 1.0,
+  "healthIcon": {
+    "id": "jake",
+    "isPixel": false
+  },
+  "animations": [
+    {
+      "name": "idle",
+      "prefix": "JAKE IDLE",
+      "fps": 24,
+      "looped": true,
+      "offsets": [0, 0]
+    },
+    {
+      "name": "idle-alt",
+      "prefix": "JAKE ALT IDLE",
+      "fps": 24,
+      "looped": true,
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singLEFT",
+      "prefix": "Jake Left",
+      "fps": 24,
+      "looped": false,
+      "offsets": [170, 23]
+    },
+    {
+      "name": "singDOWN",
+      "prefix": "JAKE Down",
+      "fps": 24,
+      "looped": false,
+      "offsets": [60, -52]
+    },
+    {
+      "name": "singUP",
+      "prefix": "JAKE UP",
+      "fps": 24,
+      "looped": false,
+      "offsets": [0, 271]
+    },
+    {
+      "name": "singRIGHT",
+      "prefix": "Jake Right",
+      "fps": 24,
+      "looped": false,
+      "offsets": [-72, 25]
+    },
+    {
+      "name": "singLEFT-alt",
+      "prefix": "Jake alt left",
+      "fps": 24,
+      "looped": false,
+      "offsets": [190, 63]
+    },
+    {
+      "name": "singDOWN-alt",
+      "prefix": "JAKE ALT Down",
+      "fps": 24,
+      "looped": false,
+      "offsets": [130, 33]
+    },
+    {
+      "name": "singUP-alt",
+      "prefix": "JAKE ALT UP",
+      "fps": 24,
+      "looped": false,
+      "offsets": [2, 306]
+    },
+    {
+      "name": "singRIGHT-alt",
+      "prefix": "JAKE ALT RIGHT",
+      "fps": 24,
+      "looped": false,
+      "offsets": [-50, 46]
+    }
+  ]
+}

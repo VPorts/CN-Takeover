@@ -1,0 +1,88 @@
+{
+  "version": "1.0.0",
+  "name": "finn-alt",
+  "assetPath": "characters/FINN_ALT",
+  "scale": 1.0,
+  "antialiasing": true,
+  "flipX": false,
+  "singDuration": 6.1,
+  "position": [40, 10],
+  "cameraOffsets": [0, 0],
+  "cameraScale": 1.0,
+  "healthIcon": {
+    "id": "finn",
+    "isPixel": false
+  },
+  "animations": [
+    {
+      "name": "idle",
+      "prefix": "FINN ALT IDLE",
+      "fps": 24,
+      "looped": true,
+      "offsets": [0, 0]
+    },
+    {
+      "name": "idle-alt",
+      "prefix": "FINN ALT  2 IDLE",
+      "fps": 24,
+      "looped": true,
+      "offsets": [0, 0]
+    },
+    {
+      "name": "singLEFT",
+      "prefix": "Finn Alt Left",
+      "fps": 24,
+      "looped": false,
+      "offsets": [97, -52]
+    },
+    {
+      "name": "singDOWN",
+      "prefix": "Finn Alt down",
+      "fps": 24,
+      "looped": false,
+      "offsets": [30, -15]
+    },
+    {
+      "name": "singUP",
+      "prefix": "Finn Alt Up",
+      "fps": 24,
+      "looped": false,
+      "offsets": [86, -18]
+    },
+    {
+      "name": "singRIGHT",
+      "prefix": "Finn alt Right",
+      "fps": 24,
+      "looped": false,
+      "offsets": [30, -80]
+    },
+    {
+      "name": "singLEFT-alt",
+      "prefix": "FINN ALT 2 LEFT",
+      "fps": 24,
+      "looped": false,
+      "offsets": [110, -52]
+    },
+    {
+      "name": "singDOWN-alt",
+      "prefix": "FINN ALT 2 DOWN",
+      "fps": 24,
+      "looped": false,
+      "offsets": [29, -15]
+    },
+    {
+      "name": "singUP-alt",
+      "prefix": "FINN ALT 2 UP",
+      "fps": 24,
+      "looped": false,
+      "offsets": [106, 7]
+    },
+    {
+      "name": "singRIGHT-alt",
+      "prefix": "FINN ALT 2 RIGHT",
+      "fps": 24,
+      "looped": false,
+      "offsets": [70, -60]
+    }
+  ]
+}

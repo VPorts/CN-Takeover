@@ -1,0 +1,383 @@
+import funkin.modding.module.Module;
+import funkin.play.PlayState;
+import funkin.modding.events.ScriptEvent;
+import funkin.modding.events.UpdateScriptEvent;
+import funkin.Highscore;
+import funkin.Preferences;
+import funkin.Paths;
+import funkin.util.Constants;
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.ui.FlxBar;
+import flixel.ui.FlxBarFillDirection;
+import flixel.text.FlxText;
+import flixel.text.FlxBitmapText;
+import flixel.text.FlxTextBorderStyle;
+import flixel.text.FlxTextAlign;
+import flixel.util.FlxColor;
+import flixel.util.FlxStringUtil;
+import flixel.math.FlxMath;
+import Std;
+import Math;
+
+class IconColourFinder
+{
+	public static function findIconColour(icon:Dynamic):FlxColor
+	{
+		if (icon == null || icon.graphic == null || icon.graphic.bitmap == null)
+		{
+			return 0xFFFFFFFF;
+		}
+
+		var colorArray:Array<Int> = [];
+		var frequencyArray:Array<Array<Int>> = [];
+		var winningArray:Array<Int> = [];
+		var detail:Int = 3;
+
+		for (i in 0...Std.int(icon.width / detail))
+		{
+			for (j in 0...Std.int(icon.height / detail))
+			{
+				var pixelColour = icon.graphic.bitmap.getPixel(i * detail, j * detail);
+				if (pixelColour != 0)
+				{
+					colorArray.push(pixelColour);
+				}
+			}
+		}
+
+		if (colorArray.length == 0) return 0xFFFFFFFF;
+
+		for (i in 0...colorArray.length)
+		{
+			var foundItem:Bool = false;
+			for (item in frequencyArray)
+			{
+				if (item[0] == colorArray[i])
+				{
+					item[1] += 1;
+					foundItem = true;
+				}
+			}
+
+			if (!foundItem)
+			{
+				frequencyArray.push([colorArray[i], 0]);
+			}
+		}
+
+		if (frequencyArray.length == 0) return 0xFFFFFFFF;
+
+		winningArray = frequencyArray[0];
+
+		for (i in 1...frequencyArray.length)
+		{
+			if (frequencyArray[i][1] > winningArray[1])
+			{
+				winningArray = frequencyArray[i];
+			}
+		}
+
+		var iconColour:Int = winningArray[0];
+		return FlxColor.fromString("0xFF" + FlxColor.toHexString(iconColour));
+	}
+}
+
+class PsychHUD extends Module
+{
+	var playState:PlayState = null;
+	var isQuietSong:Bool = false;
+
+	var scoreTxt:FlxBitmapText = null;
+	var playScoreText:FlxBitmapText = null;
+
+	var songTimeBarBG:FlxSprite = null;
+	var songTimeBar:FlxBar = null;
+	var songTimeTxt:FlxText = null;
+
+	var songPercent:Float = 0;
+
+	var playerID:String = null;
+	var opponentID:String = null;
+	var playerColour:FlxColor = 0xFF0066FF;
+	var oppColour:FlxColor = 0xFFFF0000;
+
+	public function new()
+	{
+		super("PsychHUD", 1, {state: PlayState});
+	}
+
+	override function onStateChangeEnd(event:ScriptEvent)
+	{
+		super.onStateChangeEnd(event);
+
+		if (PlayState.instance == null || !Std.isOfType(event.targetState, PlayState))
+		{
+			isQuietSong = false;
+			cleanupHUD();
+			return;
+		}
+
+		playState = PlayState.instance;
+
+		var songId:String = (playState.currentSong != null) ? playState.currentSong.id.toLowerCase() : "";
+		isQuietSong = (songId == "quiet");
+
+		if (!isQuietSong)
+		{
+			cleanupHUD();
+			return;
+		}
+
+		if (playState.gf != null)
+		{
+			playState.gf.visible = false;
+		}
+
+		playScoreText = playState.scoreText;
+		var isDownscroll:Bool = Preferences.downscroll;
+
+		if (playScoreText != null)
+		{
+			scoreTxt = new FlxBitmapText(0, 0, '', playScoreText.font);
+			scoreTxt.borderColor = 0xFF000000;
+			scoreTxt.borderSize = 4.0;
+			scoreTxt.textColor = playScoreText.textColor;
+			scoreTxt.letterSpacing = playScoreText.letterSpacing;
+			scoreTxt.wordWrap = false;
+			scoreTxt.scrollFactor.set();
+			scoreTxt.zIndex = 1000;
+			scoreTxt.cameras = [playState.camHUD];
+			scoreTxt.scale.set(1.5, 1.5);
+
+			scoreTxt.y = isDownscroll ? 115 : (FlxG.height - 45);
+
+			playState.add(scoreTxt);
+		}
+
+		createTimeBar(isDownscroll);
+		initHealthBarColors();
+
+		playState.refresh();
+	}
+
+	function createTimeBar(isDownscroll:Bool):Void
+	{
+		if (playState == null) return;
+
+		var barWidth:Int = 400;
+		var barHeight:Int = 18;
+		var barX:Float = (FlxG.width - barWidth) / 2;
+		var barY:Float = isDownscroll ? 20 : (FlxG.height - 40);
+
+		songTimeBarBG = new FlxSprite(barX, barY).makeGraphic(barWidth, barHeight, 0xFF000000);
+		songTimeBarBG.scrollFactor.set();
+		songTimeBarBG.cameras = [playState.camHUD];
+		songTimeBarBG.zIndex = 800;
+
+		songTimeBar = new FlxBar(
+			barX + 2,
+			barY + 2,
+			FlxBarFillDirection.LEFT_TO_RIGHT,
+			barWidth - 4,
+			barHeight - 4,
+			this,
+			"songPercent",
+			0,
+			1
+		);
+		songTimeBar.createFilledBar(0xFF555555, 0xFFFFFFFF);
+		songTimeBar.numDivisions = 800;
+		songTimeBar.scrollFactor.set();
+		songTimeBar.cameras = [playState.camHUD];
+		songTimeBar.zIndex = 801;
+
+		songTimeTxt = new FlxText(barX, barY - 2, barWidth, "0:00 / 0:00", 16);
+		songTimeTxt.setFormat(Paths.font("vcr.ttf"), 16, 0xFFFFFFFF, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, 0xFF000000);
+		songTimeTxt.borderSize = 1.5;
+		songTimeTxt.scrollFactor.set();
+		songTimeTxt.cameras = [playState.camHUD];
+		songTimeTxt.zIndex = 802;
+
+		playState.add(songTimeBarBG);
+		playState.add(songTimeBar);
+		playState.add(songTimeTxt);
+	}
+
+	function initHealthBarColors():Void
+	{
+		if (playState == null || playState.healthBar == null) return;
+
+		if (playState.iconP1 != null)
+		{
+			playerID = playState.iconP1.characterId;
+			playerColour = IconColourFinder.findIconColour(playState.iconP1);
+			if (playerColour == 0xFFFFFFFF) playerColour = Constants.COLOR_HEALTH_BAR_GREEN;
+		}
+
+		if (playState.iconP2 != null)
+		{
+			opponentID = playState.iconP2.characterId;
+			oppColour = IconColourFinder.findIconColour(playState.iconP2);
+			if (oppColour == 0xFFFFFFFF) oppColour = Constants.COLOR_HEALTH_BAR_RED;
+		}
+
+		playState.healthBar.createFilledBar(oppColour, playerColour);
+		playState.healthBar.updateBar();
+	}
+
+	function checkHealthBarUpdate():Void
+	{
+		if (playState == null || playState.healthBar == null) return;
+
+		var needUpdate:Bool = false;
+
+		if (playState.iconP1 != null && playerID != playState.iconP1.characterId)
+		{
+			playerID = playState.iconP1.characterId;
+			playerColour = IconColourFinder.findIconColour(playState.iconP1);
+			if (playerColour == 0xFFFFFFFF) playerColour = Constants.COLOR_HEALTH_BAR_GREEN;
+			needUpdate = true;
+		}
+
+		if (playState.iconP2 != null && opponentID != playState.iconP2.characterId)
+		{
+			opponentID = playState.iconP2.characterId;
+			oppColour = IconColourFinder.findIconColour(playState.iconP2);
+			if (oppColour == 0xFFFFFFFF) oppColour = Constants.COLOR_HEALTH_BAR_RED;
+			needUpdate = true;
+		}
+
+		if (needUpdate)
+		{
+			playState.healthBar.createFilledBar(oppColour, playerColour);
+			playState.healthBar.updateBar();
+		}
+	}
+
+	override function onNoteGhostMiss(event:ScriptEvent)
+	{
+		super.onNoteGhostMiss(event);
+
+		if (!isQuietSong) return;
+
+		event.cancel();
+		event.stopPropagation();
+	}
+
+	override function onNoteHit(event:ScriptEvent)
+	{
+		super.onNoteHit(event);
+
+		if (!isQuietSong || playState == null) return;
+
+		if (event.note != null)
+		{
+			if (!event.note.mustHitNote)
+			{
+				FlxG.camera.shake(0.01, 0.05);
+			}
+			else if (event.note.isSustainNote && event.score != null)
+			{
+				playState.songScore -= event.score;
+			}
+		}
+	}
+
+	override function onOpponentNoteHit(event:ScriptEvent)
+	{
+		super.onOpponentNoteHit(event);
+
+		if (!isQuietSong || playState == null) return;
+
+		FlxG.camera.shake(0.01, 0.05);
+	}
+
+	override function onUpdate(event:UpdateScriptEvent)
+	{
+		super.onUpdate(event);
+
+		if (!isQuietSong || playState == null) return;
+
+		if (playState.gf != null && playState.gf.visible)
+		{
+			playState.gf.visible = false;
+		}
+
+		if (playScoreText != null)
+		{
+			playScoreText.visible = false;
+			playScoreText.active = false;
+		}
+
+		if (scoreTxt != null)
+		{
+			var totalNotes:Float = Highscore.tallies.totalNotesHit + Highscore.tallies.missed;
+			var accuracy:Float = 0;
+
+			if (totalNotes > 0)
+			{
+				accuracy = FlxMath.roundDecimal((Highscore.tallies.sick + Highscore.tallies.good - Highscore.tallies.missed) / totalNotes * 100, 2);
+				if (Math.isNaN(accuracy) || accuracy < 0) accuracy = 0;
+			}
+
+			var rawScore:Int = playState.songScore;
+			scoreTxt.text = "Score: " + rawScore + " • Misses: " + Highscore.tallies.missed + " • Rating: " + accuracy + "%";
+			scoreTxt.x = ((FlxG.width - scoreTxt.width) / 2 - ((scoreTxt.width * (scoreTxt.scale.x - 1)) / 2)) + 45;
+		}
+
+		if (FlxG.sound.music != null && songTimeBar != null && songTimeTxt != null)
+		{
+			var curTime:Float = FlxG.sound.music.time;
+			var totalTime:Float = FlxG.sound.music.length;
+
+			if (totalTime > 0)
+			{
+				songPercent = Math.max(0, Math.min(1, curTime / totalTime));
+				songTimeBar.value = songPercent;
+				songTimeBar.updateBar();
+
+				var formattedCur:String = FlxStringUtil.formatTime(curTime / 1000, false);
+				var formattedTotal:String = FlxStringUtil.formatTime(totalTime / 1000, false);
+
+				songTimeTxt.text = formattedCur + " / " + formattedTotal;
+			}
+		}
+
+		checkHealthBarUpdate();
+	}
+
+	function cleanupHUD():Void
+	{
+		if (scoreTxt != null) scoreTxt.destroy();
+		if (songTimeBarBG != null) songTimeBarBG.destroy();
+		if (songTimeBar != null) songTimeBar.destroy();
+		if (songTimeTxt != null) songTimeTxt.destroy();
+
+		scoreTxt = null;
+		songTimeBarBG = null;
+		songTimeBar = null;
+		songTimeTxt = null;
+
+		if (playState != null)
+		{
+			if (playState.gf != null)
+			{
+				playState.gf.visible = true;
+			}
+
+			if (playScoreText != null)
+			{
+				playScoreText.visible = true;
+				playScoreText.active = true;
+			}
+		}
+	}
+
+	override function onDestroy(event:ScriptEvent)
+	{
+		super.onDestroy(event);
+		cleanupHUD();
+		isQuietSong = false;
+	}
+}

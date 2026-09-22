@@ -1,0 +1,43 @@
+{
+  "version": "1.0.0",
+  "name": "MY CUSTOM WEEK",
+  "titleAsset": "storymenu/titles/week1",
+  "visible": false,
+  "props": [
+    {
+      "assetPath": "storymenu/props/dad",
+      "scale": 1.0,
+      "danceEvery": 1,
+      "offsets": [0, 0],
+      "animations": [
+        {
+          "name": "idle",
+          "prefix": "Dad idle",
+          "frameRate": 24
+        }
+      ]
+    },
+    {
+      "assetPath": "storymenu/props/bf",
+      "scale": 1.0,
+      "danceEvery": 2,
+      "offsets": [150, 80],
+      "animations": [
+        {
+          "name": "idle",
+          "prefix": "BF idle",
+          "frameRate": 24
+        },
+        {
+          "name": "confirm",
+          "prefix": "BF confirm",
+          "frameRate": 24
+        }
+      ]
+    }
+  ],
+  "background": "#F9CF51",
+  "songs": [
+    "quiet"
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "version": "1.0.0",
+  "name": "bfcn",
+  "assetPath": "characters/bfcn",
+  "scale": 1.0,
+  "antialiasing": true,
+  "flipX": true,
+  "singDuration": 4.0,
+  "position": [0, 350],
+  "cameraOffsets": [0, 0],
+  "cameraScale": 1.0,
+  "healthIcon": {
+    "id": "bf",
+    "isPixel": false
+  },
+  "animations": [
+    {
+      "name": "idle",
+      "prefix": "BF idle dance",
+      "fps": 24,
+      "looped": false,
+      "offsets": [-5, 0]
+    },
+    {
+      "name": "singLEFT",
+      "prefix": "BF NOTE LEFT0",
+      "fps": 24,
+      "looped": false,
+      "offsets": [5, -6]
+    },
+    {
+      "name": "singDOWN",
+      "prefix": "BF NOTE DOWN0",
+      "fps": 24,
+      "looped": false,
+      "offsets": [-20, -51]
+    },
+    {
+      "name": "singUP",
+      "prefix": "BF NOTE UP0",
+      "fps": 24,
+      "looped": false,
+      "offsets": [-46, 27]
+    },
+    {
+      "name": "singRIGHT",
+      "prefix": "BF NOTE RIGHT0",
+      "fps": 24,
+      "looped": false,
+      "offsets": [-48, -7]
+    },
+    {
+      "name": "singLEFTmiss",
+      "prefix": "BF NOTE LEFT MISS",
+      "fps": 24,
+      "looped": false,
+      "offsets": [7, 19]
+    },
+    {
+      "name": "singDOWNmiss",
+      "prefix": "BF NOTE DOWN MISS",
+      "fps": 24,
+      "looped": false,
+      "offsets": [-15, -19]
+    },
+    {
+      "name": "singUPmiss",
+      "prefix": "BF NOTE UP MISS",
+      "fps": 24,
+      "looped": false,
+      "offsets": [-46, 27]
+    },
+    {
+      "name": "singRIGHTmiss",
+      "prefix": "BF NOTE RIGHT MISS",
+      "fps": 24,
+      "looped": false,
+      "offsets": [-44, 22]
+    },
+    {
+      "name": "hey",
+      "prefix": "BF HEY",
+      "fps": 24,
+      "looped": false,
+      "offsets": [-3, 5]
+    },
+    {
+      "name": "scared",
+      "prefix": "BF idle shaking",
+      "fps": 24,
+      "looped": true,
+      "offsets": [-5, 0]
+    },
+    {
+      "name": "firstDeath",
+      "prefix": "BF dies",
+      "fps": 24,
+      "looped": false,
+      "offsets": [11, 10]
+    },
+    {
+      "name": "deathLoop",
+      "prefix": "BF Dead Loop",
+      "fps": 24,
+      "looped": true,
+      "offsets": [11, 4]
+    },
+    {
+      "name": "deathConfirm",
+      "prefix": "BF Dead confirm",
+      "fps": 24,
+      "looped": false,
+      "offsets": [11, 68]
+    },
+    {
+      "name": "singLEFT-alt",
+      "prefix": "ALT 2 BF LEFT",
+      "fps": 24,
+      "looped": false,
+      "offsets": [10, 16]
+    },
+    {
+      "name": "singDOWN-alt",
+      "prefix": "ALT 2 BF DOWN",
+      "fps": 24,
+      "looped": false,
+      "offsets": [-30, -70]
+    },
+    {
+      "name": "singUP-alt",
+      "prefix": "ALT 2 BF UP",
+      "fps": 24,
+      "looped": false,
+      "offsets": [-79, 69]
+    },
+    {
+      "name": "singRIGHT-alt",
+      "prefix": "ALT 2 BF RIGHT",
+      "fps": 24,
+      "looped": false,
+      "offsets": [-26, -6]
+    }
+  ]
+}
